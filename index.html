@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>RIG Gym — AI Reception (Demo)</title>
+  <meta name="description" content="A 24/7 AI receptionist for RIG Gym, Epsom. Built by Kaiser Collective." />
+
+  <style>
+    /* Kaiser self-hosted fonts */
+    @font-face {
+      font-family: 'Neue Montreal';
+      src: url('./fonts/NeueMontreal-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Neue Montreal';
+      src: url('./fonts/NeueMontreal-Medium.woff2') format('woff2');
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Neue Montreal';
+      src: url('./fonts/NeueMontreal-Bold.woff2') format('woff2');
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Editorial New';
+      src: url('./fonts/EditorialNew-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg: #0a0a0a;
+      --bg-elev: #141414;
+      --line: #2a2a2a;
+      --text: #f5f5f5;
+      --muted: #999;
+      --accent: #ff5b1f;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Neue Montreal', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-weight: 400;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      min-height: 100vh;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: clamp(20px, 4vw, 48px);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .brand .x {
+      color: var(--muted);
+      font-weight: 400;
+      margin: 0 4px;
+    }
+
+    .demo-pill {
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 6px 12px;
+      border-radius: 999px;
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: clamp(32px, 5vw, 80px);
+      align-items: center;
+      padding: clamp(40px, 8vw, 100px) 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    @media (min-width: 900px) {
+      main {
+        grid-template-columns: 1.1fr 1fr;
+      }
+    }
+
+    h1 {
+      font-family: 'Editorial New', Georgia, serif;
+      font-weight: 400;
+      font-size: clamp(40px, 6vw, 76px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 24px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .lede {
+      font-size: clamp(16px, 1.6vw, 19px);
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 32px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .meta span {
+      font-size: 13px;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      padding: 6px 12px;
+      border-radius: 999px;
+      letter-spacing: 0.02em;
+    }
+
+    .panel {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: clamp(24px, 4vw, 40px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top right, rgba(255, 91, 31, 0.08), transparent 50%);
+      pointer-events: none;
+    }
+
+    .panel-label {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .panel-title {
+      font-family: 'Editorial New', Georgia, serif;
+      font-size: clamp(22px, 2.5vw, 28px);
+      margin-bottom: 16px;
+    }
+
+    .panel-text {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 24px;
+    }
+
+    .widget-mount {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ElevenLabs widget gets injected here. Style its container. */
+    elevenlabs-convai {
+      display: block;
+      width: 100%;
+    }
+
+    .prompts {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .prompts-title {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .prompt-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .prompt-list li {
+      font-size: 14px;
+      color: var(--text);
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .prompt-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    footer a {
+      color: var(--text);
+      text-decoration: none;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 1px;
+      transition: border-color 0.2s;
+    }
+
+    footer a:hover {
+      border-color: var(--accent);
+    }
+
+    .disclosure {
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="dot"></span>
+      RIG Gym
+      <span class="x">×</span>
+      Kaiser Collective
+    </div>
+    <div class="demo-pill">Live Demo</div>
+  </header>
+
+  <main>
+    <section>
+      <h1>The gym's new <em>front desk</em>. Open 24/7.</h1>
+      <p class="lede">
+        A working AI receptionist for RIG Gym, Epsom. Books free trials, answers membership questions, never misses a call.
+      </p>
+      <div class="meta">
+        <span>British voice</span>
+        <span>Books into Cal.com</span>
+        <span>~£0.45 / call</span>
+        <span>Built in 2 weeks</span>
+      </div>
+      <p class="disclosure">
+        This is a live working demo. The agent will book a real trial slot in a Cal.com test calendar and you'll get a confirmation email. Speak naturally — interrupt it, change your mind, ask anything.
+      </p>
+    </section>
+
+    <aside class="panel">
+      <div class="panel-label">Talk to the agent</div>
+      <h2 class="panel-title">Tap the call button to start</h2>
+      <p class="panel-text">
+        It picks up on ring 1, knows the gym cold, and books your trial in under 90 seconds. Try it.
+      </p>
+
+      <div class="widget-mount">
+        <!-- ElevenLabs ConvAI widget for RIG Gym demo agent -->
+        <elevenlabs-convai agent-id="agent_9401kqcfqwdefh7v2s4q2t72k1wv"></elevenlabs-convai>
+      </div>
+
+      <div class="prompts">
+        <div class="prompts-title">Try saying</div>
+        <ul class="prompt-list">
+          <li>"Hi, I'm interested in joining."</li>
+          <li>"What's the difference between Off-Peak and Anytime?"</li>
+          <li>"Can I freeze my membership if I'm injured?"</li>
+          <li>"What does personal training cost?"</li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <div>
+      Built by <a href="https://kaisercollective.io" target="_blank" rel="noopener">Kaiser Collective</a> for RIG Gym, Epsom
+    </div>
+    <div>
+      <a href="https://riggym.pages.dev" target="_blank" rel="noopener">Visit RIG Gym →</a>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
+</body>
+</html>
